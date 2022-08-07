@@ -11,7 +11,7 @@ Generar un entorno virtual:
 ```bat
 cd Alkemy_Challenge_Data_Analytics_con_Python
 python -m venv alkemy_mcoutada_venv
-:: El comando de abajo cambia si no es Windows
+:: Activar el entorno (el comando de abajo cambia si no es Windows)
 .\alkemy_mcoutada_venv\Scripts\activate.bat
 :: Para desactivarlo, escribir:
 :: deactivate
