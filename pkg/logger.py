@@ -1,5 +1,5 @@
 """
-Logging template took from
+Logging template copied from:
 https://towardsdatascience.com/the-reusable-python-logging-template-for-all-your-data-science-apps-551697c8540
 https://github.com/yashprakash13/Python-Cool-Concepts/blob/main/logging_template/logger/logger.py
 
@@ -9,9 +9,10 @@ import sys
 
 APP_LOGGER_NAME = 'MyAwesomeApp'
 
-def setup_applevel_logger(logger_name = APP_LOGGER_NAME, 
-                        is_debug=True, 
-                        file_name=None):
+
+def setup_applevel_logger(logger_name=APP_LOGGER_NAME,
+                          is_debug=True,
+                          file_name=None):
     logger = logging.getLogger(logger_name)
     logger.setLevel(logging.DEBUG if is_debug else logging.INFO)
 
