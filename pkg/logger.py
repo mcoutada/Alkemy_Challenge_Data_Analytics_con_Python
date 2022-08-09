@@ -1,8 +1,4 @@
 """
-Logging template credits:
-https://towardsdatascience.com/the-reusable-python-logging-template-for-all-your-data-science-apps-551697c8540
-https://github.com/yashprakash13/Python-Cool-Concepts/blob/main/logging_template/logger/logger.py
-
 
 +----------+---------------+-----------------------------------------------------------------------------------------------------------------------------+
 | Level    | Numeric value | Description                                                                                                                 |
@@ -23,6 +19,9 @@ https://github.com/yashprakash13/Python-Cool-Concepts/blob/main/logging_template
 |          |               | In many circles, it has already become nonessential. The root log is usually created with level WARNING.                    |
 +----------+---------------+-----------------------------------------------------------------------------------------------------------------------------+
 
+Logging template credits:
+https://towardsdatascience.com/the-reusable-python-logging-template-for-all-your-data-science-apps-551697c8540
+https://github.com/yashprakash13/Python-Cool-Concepts/blob/main/logging_template/logger/logger.py
 
 """
 import logging
@@ -36,12 +35,24 @@ if not os.path.exists(LOG_DIR):
     os.mkdir(LOG_DIR)
 
 APP_LOGGER_NAME = 'Alkemy_challenge'
+# uncomment after testing
 # APP_LOG_FILE_NAME = os.path.join(LOG_DIR, f'{APP_LOGGER_NAME}_{datetime.now():%Y%m%d_%H%M%S-%f}.log')
 APP_LOG_FILE_NAME = os.path.join(LOG_DIR, f'{APP_LOGGER_NAME}.log')
 
 def setup_applevel_logger(logger_name=APP_LOGGER_NAME,
                           is_debug=True,
                           file_name=APP_LOG_FILE_NAME):
+    """
+    Sets up the main logger
+
+    Args:
+        logger_name (str, optional): main logger's name. Defaults to APP_LOGGER_NAME.
+        is_debug (bool, optional): Sets log's level to DEBUG. Defaults to True.
+        file_name (str, optional): If set, the log's output will be stored into a file in the /logs folder. Defaults to APP_LOG_FILE_NAME.
+
+    Returns:
+        logging.Logger: Main logger
+    """    
     
     # Set up the logger (to avoid using the root logger)
     logger = logging.getLogger(logger_name)
@@ -55,8 +66,7 @@ def setup_applevel_logger(logger_name=APP_LOGGER_NAME,
     # Set up a logging format
     formatter = logging.Formatter(
         # "%(asctime)s - %(name)s - %(levelname)s - %(message)s" # Default
-        # fmt="[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
-        fmt='%(asctime)s.%(msecs)03d %(name)-30s [%(filename)s:%(lineno)d] %(levelname)-8s - %(message)s',
+        fmt='%(asctime)s.%(msecs)03d [%(filename)s:%(lineno)d - %(name)-30s] %(levelname)-8s - %(message)s',
         datefmt="%Y-%m-%d %H:%M:%S"
         )
 
@@ -67,6 +77,44 @@ def setup_applevel_logger(logger_name=APP_LOGGER_NAME,
     
     # Add the console handler to the logger for the messages to be shown on the console
     logger.addHandler(sh)
+
+    def log_unhandled_exception(*exc_info):
+        exc_type, exc_value, exc_traceback = exc_info
+        """
+        Logging uncaught exceptions in Python
+        https://stackoverflow.com/questions/6234405/logging-uncaught-exceptions-in-python/16993115#16993115
+        
+        Args:
+            exc_type (type): Gets the type of the exception being handled (a subclass of BaseException). Example: <class 'ZeroDivisionError'>
+            exc_value (error): Gets the exception instance (an instance of the exception type). Example: division by zero
+            exc_traceback (traceback): Gets a traceback object which encapsulates the call stack at the point where the exception originally occurred. Example: <traceback object at 0x7f8b8b8b8b8>
+        """
+
+        print('\n\n\n')
+        print(exc_info)
+        print('\n')
+        print(exc_type)
+        print('\n')
+        print(exc_value)
+        print('\n')
+        print(exc_traceback)
+        print('\n\n\n')
+
+        # Ignore KeyboardInterrupt so a console python program can exit with Ctrl + C.
+        if issubclass(exc_type, KeyboardInterrupt):
+            sys.__excepthook__(exc_type, exc_value, exc_traceback)
+            return
+
+        # Rely entirely on python's logging module for formatting the exception.
+        logger.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
+
+    # sys.excepthook(type, value, traceback) prints out a given traceback and exception to sys.stderr
+    # When an exception is raised and uncaught, the interpreter calls sys.excepthook with three arguments:
+    # the exception class, exception instance, and a traceback object.
+    # In an interactive session this happens just before control is returned to the prompt;
+    # in a Python program this happens just before the program exits.
+    # The handling of such top-level exceptions can be customized by assigning another three-argument function to sys.excepthook.
+    sys.excepthook = log_unhandled_exception
 
     # Set up a file handler if a file name is provided for the messages to be logged to a log file
     if file_name:
