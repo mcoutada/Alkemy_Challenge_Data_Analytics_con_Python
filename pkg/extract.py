@@ -1,4 +1,5 @@
 import pkg.logger as logger
+
 log = logger.get_child_logger(module_name=__name__)
 
 
@@ -8,5 +9,5 @@ def test(b):
     return b
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     test()

@@ -29,21 +29,21 @@ import sys
 import os
 import time
 
-LOG_DIR = os.path.join(os.path.normpath(os.getcwd()), 'logs')
+LOG_DIR = os.path.join(os.path.normpath(os.getcwd()), "logs")
 
 if not os.path.exists(LOG_DIR):
     os.mkdir(LOG_DIR)
 
-APP_LOGGER_NAME = 'Alkemy_challenge'
+APP_LOGGER_NAME = "Alkemy_challenge"
 # Use this line to generate one log file per file run
 # from datetime import datetime
 # APP_LOG_FILE_NAME = os.path.join(LOG_DIR, f'{APP_LOGGER_NAME}_{datetime.now():%Y%m%d_%H%M%S-%f}.log')
-APP_LOG_FILE_NAME = os.path.join(LOG_DIR, f'{APP_LOGGER_NAME}.log')
+APP_LOG_FILE_NAME = os.path.join(LOG_DIR, f"{APP_LOGGER_NAME}.log")
 
 
-def setup_applevel_logger(logger_name=APP_LOGGER_NAME,
-                          is_debug=True,
-                          file_name=APP_LOG_FILE_NAME):
+def setup_applevel_logger(
+    logger_name=APP_LOGGER_NAME, is_debug=True, file_name=APP_LOG_FILE_NAME
+):
     """
     Sets up the main logger
 
@@ -70,8 +70,8 @@ def setup_applevel_logger(logger_name=APP_LOGGER_NAME,
     # Set up a logging format
     formatter = logging.Formatter(
         # "%(asctime)s - %(name)s - %(levelname)s - %(message)s" # Default
-        fmt='%(asctime)s.%(msecs)03d [%(filename)-10s:%(lineno)4d - %(name)-30s] %(levelname)-8s - %(message)s',
-        datefmt="%Y-%m-%d %H:%M:%S"
+        fmt="%(asctime)s.%(msecs)03d [%(filename)-10s:%(lineno)4d - %(name)-30s] %(levelname)-8s - %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
     )
 
     # Set up a console handler
@@ -149,14 +149,11 @@ def log_unhandled_exception(in_logger, *in_exc_info):
 
     # Rely entirely on python's logging module for formatting the exception.
     in_logger.critical(
-        "Uncaught exception",
-        exc_info=(
-            exc_type,
-            exc_value,
-            exc_traceback))
+        "Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback)
+    )
 
 
-class Debug2Log():
+class Debug2Log:
     """
     Debug a function and return it back
     Credits:
@@ -175,12 +172,14 @@ class Debug2Log():
     def __call__(self, *args, **kwargs):
         if self.logger.getEffectiveLevel() == logging.DEBUG:
             self.logger.debug(
-                f'Calling {self.func.__name__} with args, kwargs: {args, kwargs}')
+                f"Calling {self.func.__name__} with args, kwargs: {args, kwargs}"
+            )
             start = time.time()
             result = self.func(*args, **kwargs)
             duration = time.time() - start
             self.logger.debug(
-                f'Finished {self.func.__name__} returned: {result} - elapsed: {duration}')
+                f"Finished {self.func.__name__} returned: {result} - elapsed: {duration}"
+            )
         else:
             result = self.func(*args, **kwargs)
 
