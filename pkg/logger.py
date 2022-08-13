@@ -29,23 +29,24 @@ import sys
 import os
 import time
 
-LOG_DIR = os.path.join(os.path.normpath(os.getcwd()), "logs")
+LOG_DIR = os.path.join(os.getcwd(), "logs")
 
 if not os.path.exists(LOG_DIR):
     os.mkdir(LOG_DIR)
 
 APP_LOGGER_NAME = "Alkemy_challenge"
+
 # Use this line to generate one log file per file run
 # from datetime import datetime
-# APP_LOG_FILE_NAME = os.path.join(LOG_DIR, f'{APP_LOGGER_NAME}_{datetime.now():%Y%m%d_%H%M%S-%f}.log')
-APP_LOG_FILE_NAME = os.path.join(LOG_DIR, f"{APP_LOGGER_NAME}.log")
+# APP_LOG_FILE_NAME = os.path.join(LOG_DIR, f'{APP_LOGGER_NAME}_{datetime.now():%Y%m%d_%H%M%S_%f}.log') # TODO: erase or uncomment (leave one)
+APP_LOG_FILE_NAME = os.path.join(LOG_DIR, f'{APP_LOGGER_NAME}.log')
 
 
 def setup_applevel_logger(
     logger_name=APP_LOGGER_NAME, is_debug=True, file_name=APP_LOG_FILE_NAME
 ):
     """
-    Sets up the main logger
+    Sets up the logger at app level
 
     Args:
         logger_name (str, optional): main logger's name. Defaults to APP_LOGGER_NAME.
@@ -56,7 +57,7 @@ def setup_applevel_logger(
         logging.Logger: Main logger
     """
 
-    # Set up the logger (to avoid using the root logger)
+    # Set up the logger (to avoid using the default/root logger)
     logger = logging.getLogger(logger_name)
 
     # Set up the logging level (to know which messages to log)
@@ -69,8 +70,7 @@ def setup_applevel_logger(
 
     # Set up a logging format
     formatter = logging.Formatter(
-        # "%(asctime)s - %(name)s - %(levelname)s - %(message)s" # Default
-        fmt="%(asctime)s.%(msecs)03d [%(filename)-10s:%(lineno)4d - %(name)-30s] %(levelname)-8s - %(message)s",
+        fmt="%(asctime)s.%(msecs)03d [%(filename)-10s:%(lineno)-4d - %(name)-30s] %(levelname)8s: %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
     )
 
@@ -125,12 +125,12 @@ def log_unhandled_exception(in_logger, *in_exc_info):
     Logging uncaught exceptions in Python
     https://stackoverflow.com/questions/6234405/logging-uncaught-exceptions-in-python/16993115#16993115
 
-    # When an exception is raised and uncaught, the interpreter calls sys.excepthook with three arguments:
-    # the exception class, exception instance, and a traceback object.
-    # In an interactive session this happens just before control is returned to the prompt;
-    # in a Python program this happens just before the program exits.
-    # The handling of such top-level exceptions can be customized by assigning another three-argument function to sys.excepthook.
-    # sys.excepthook = log_unhandled_exception
+    When an exception is raised and uncaught, the interpreter calls sys.excepthook with three arguments:
+    the exception class, exception instance, and a traceback object.
+    In an interactive session this happens just before control is returned to the prompt;
+    in a Python program this happens just before the program exits.
+    The handling of such top-level exceptions can be customized by assigning another three-argument function to sys.excepthook.
+    sys.excepthook = log_unhandled_exception
 
     Args:
         *exc_info is unpacked to:
@@ -163,6 +163,8 @@ class Debug2Log:
     https://stackoverflow.com/questions/862807/how-would-you-write-a-debuggable-decorator-in-python
     https://stackoverflow.com/questions/32163436/python-decorator-for-printing-every-line-executed-by-a-function
     https://pymotw.com/2/sys/tracing.html
+    https://www.debuggingbook.org/html/Tracer.html
+    https://stackoverflow.com/questions/32607286/how-to-print-function-arguments-in-sys-settrace
     """
 
     def __init__(self, func, logger):
@@ -184,3 +186,39 @@ class Debug2Log:
             result = self.func(*args, **kwargs)
 
         return result
+
+
+class Debug2Log2:
+    """
+    Debug a function and return it back
+    """
+
+    def __init__(self):
+        # As the messages are triggered in this script, the logger's name is set to this script's name.
+        self.logger = get_child_logger(module_name=__name__)
+        self.timer = {}
+
+    def tracefunc(self, frame, event, arg):
+        """tracefunc is a trace function for the sys.settrace function.
+
+        Args:
+            frame (_type_): _description_
+            event (_type_): _description_
+            arg (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
+        # Log only the functions from this project, imported modules are ignored.
+        if frame.f_code.co_filename.startswith(os.getcwd()):
+            rel_path_fname = os.sep + os.path.relpath(frame.f_code.co_filename, start=os.getcwd())
+            if event == "call":
+                self.timer[rel_path_fname] = time.time()
+                self.logger.debug(f"Call {rel_path_fname} {frame.f_code.co_name} locals: {'' if frame.f_locals is None else frame.f_locals}")
+            elif event == "return" and rel_path_fname in self.timer:
+                duration = time.time() - self.timer[rel_path_fname]
+                self.logger.debug(f"End {rel_path_fname} {frame.f_code.co_name} returning: {arg} elapsed: {duration:.4f}")
+            return self.tracefunc
+
+    def basic_debug2log(self):
+        return sys.setprofile(self.tracefunc)
