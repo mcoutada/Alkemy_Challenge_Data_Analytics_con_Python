@@ -4,15 +4,9 @@ import sys
 
 def main():
 
-    debug_flg = False
-
-    # Checking if the user has passed in a command line argument
-    # If the argument is DEBUG, set the debug flag to True.
-    if len(sys.argv) == 2:
-        debug_flg == True if sys.argv[1] == 'DEBUG' else False
-
     log = logger.setup_applevel_logger(
-        is_debug=debug_flg
+        # Check if the user has passed in a command line argument
+        is_debug=True if sys.argv[1:2] == ['DEBUG'] else False
     )
     log.info("Start Main")
 
