@@ -155,62 +155,35 @@ def log_unhandled_exception(in_logger, *in_exc_info):
 
 class Debug2Log:
     """
-    Debug a function and return it back
-    Credits:
-    https://tech.serhatteker.com/post/2019-07/python-debug-decorators/
-
-    https://ankitbko.github.io/blog/2021/04/logging-in-python/
-    https://stackoverflow.com/questions/862807/how-would-you-write-a-debuggable-decorator-in-python
-    https://stackoverflow.com/questions/32163436/python-decorator-for-printing-every-line-executed-by-a-function
-    https://pymotw.com/2/sys/tracing.html
-    https://www.debuggingbook.org/html/Tracer.html
-    https://stackoverflow.com/questions/32607286/how-to-print-function-arguments-in-sys-settrace
-    """
-
-    def __init__(self, func, logger):
-        self.func = func
-        self.logger = logger
-
-    def __call__(self, *args, **kwargs):
-        if self.logger.getEffectiveLevel() == logging.DEBUG:
-            self.logger.debug(
-                f"Calling {self.func.__name__} with args, kwargs: {args, kwargs}"
-            )
-            start = time.time()
-            result = self.func(*args, **kwargs)
-            duration = time.time() - start
-            self.logger.debug(
-                f"Finished {self.func.__name__} returned: {result} - elapsed: {duration}"
-            )
-        else:
-            result = self.func(*args, **kwargs)
-
-        return result
-
-
-class Debug2Log2:
-    """
-    Debug a function and return it back
+    Class used to log debug messages.
     """
 
     def __init__(self):
-        # As the messages are triggered in this script, the logger's name is set to this script's name.
+        # As the messages are triggered in this script, the logger's name is set to this file's name.
         self.logger = get_child_logger(module_name=__name__)
         self.timer = {}
 
     def tracefunc(self, frame, event, arg):
-        """tracefunc is a trace function for the sys.settrace function.
-
+        """tracefunc is a trace function for the sys.setprofile function.
+        sys.setprofile(profilefunc):
+        Profile functions should have three arguments: frame, event, and arg.
+        'call': A function is called (or some other code block entered). The profile function is called; arg is None.
+        'return': A function (or other code block) is about to return. The profile function is called; arg is the value that will be returned, or None if the event is caused by an exception being raised.
+        'c_call': A C function is about to be called. This may be an extension function or a built-in. arg is the C function object.
+        'c_return':A C function has returned. arg is the C function object.
+        'c_exception':A C function has raised an exception. arg is the C function object.
         Args:
-            frame (_type_): _description_
-            event (_type_): _description_
-            arg (_type_): _description_
+            frame (frame): is the current stack frame. A stack frame represents a single function call. You can visualize functions that call one another as virtual frames stacking on top of one another. The stack data structure is actually used for this
+            event (str): is a string: 'call', 'return', 'c_call', 'c_return', or 'c_exception'.
+            arg (?): depends on the event type.
 
         Returns:
-            _type_: _description_
+            function: set tracefunc
         """
+
         # Log only the functions from this project, imported modules are ignored.
         if frame.f_code.co_filename.startswith(os.getcwd()):
+            # Get the relative path of the file. E.g. \pkg\extract.py
             rel_path_fname = os.sep + os.path.relpath(frame.f_code.co_filename, start=os.getcwd())
             if event == "call":
                 self.timer[rel_path_fname] = time.time()
