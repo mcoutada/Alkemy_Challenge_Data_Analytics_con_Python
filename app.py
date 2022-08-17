@@ -4,9 +4,13 @@ import sys
 
 def main():
 
-    log = logger.setup_applevel_logger(
-        # Check if the user has passed in a command line argument
-        is_debug=True if sys.argv[1:2] == ['DEBUG'] else False
+    # Check if the user has passed in a command line DEBUG argument
+    logger.debug_flg = True if sys.argv[1:2] == ['DEBUG'] else False
+    
+    # Set the logger for this file
+    log = logger.set_logger(
+        logger_name=logger.get_rel_path(__file__),
+        is_debug= logger.debug_flg
     )
     log.info("Start Main")
 

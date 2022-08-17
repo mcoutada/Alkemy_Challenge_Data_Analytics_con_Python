@@ -1,24 +1,4 @@
 """
-
-+----------+---------------+-----------------------------------------------------------------------------------------------------------------------------+
-| Level    | Numeric value | Description                                                                                                                 |
-+----------+---------------+-----------------------------------------------------------------------------------------------------------------------------+
-| CRITICAL | 50            | A serious error, indicating that the program itself may be unable to continue running.                                      |
-+----------+---------------+-----------------------------------------------------------------------------------------------------------------------------+
-| ERROR    | 40            | Due to a more serious problem, the software has not been able to perform some function.                                     |
-+----------+---------------+-----------------------------------------------------------------------------------------------------------------------------+
-| WARNING  | 30            | An indication that something unexpected happened, or indicative of some problem in the near future (e.g. ‘disk space low’). |
-|          |               | The software is still working as expected.                                                                                  |
-+----------+---------------+-----------------------------------------------------------------------------------------------------------------------------+
-| INFO     | 20            | Confirmation that things are working as expected.                                                                           |
-+----------+---------------+-----------------------------------------------------------------------------------------------------------------------------+
-| DEBUG    | 10            | Detailed information, typically of interest only when diagnosing problems.                                                  |
-+----------+---------------+-----------------------------------------------------------------------------------------------------------------------------+
-| NOTSET   | 0             | This is the initial default setting of a log when it is created.                                                            |
-|          |               | It is not really relevant and most developers will not even take notice of this category.                                   |
-|          |               | In many circles, it has already become nonessential. The root log is usually created with level WARNING.                    |
-+----------+---------------+-----------------------------------------------------------------------------------------------------------------------------+
-
 Logging template credits:
 https://towardsdatascience.com/the-reusable-python-logging-template-for-all-your-data-science-apps-551697c8540
 https://github.com/yashprakash13/Python-Cool-Concepts/blob/main/logging_template/logger/logger.py
@@ -30,11 +10,14 @@ import os
 import time
 
 LOG_DIR = os.path.join(os.getcwd(), "logs")
+global debug_flg
+debug_flg = False
 
 if not os.path.exists(LOG_DIR):
     os.mkdir(LOG_DIR)
 
-APP_LOGGER_NAME = "Alkemy_challenge"
+# Set a logger's name, in case it's not provided, to the base project's folder name is used by default (Alkemy_Challenge_Data_Analytics_con_Python)
+APP_LOGGER_NAME = os.path.basename(os.getcwd())
 
 # Use this line to generate one log file per file run
 # from datetime import datetime
@@ -42,8 +25,8 @@ APP_LOGGER_NAME = "Alkemy_challenge"
 APP_LOG_FILE_NAME = os.path.join(LOG_DIR, f'{APP_LOGGER_NAME}.log')
 
 
-def setup_applevel_logger(
-    logger_name=APP_LOGGER_NAME, is_debug=True, file_name=APP_LOG_FILE_NAME
+def set_logger(
+    logger_name=APP_LOGGER_NAME, is_debug=debug_flg, file_name=APP_LOG_FILE_NAME
 ):
     """
     Sets up the logger at app level
@@ -61,16 +44,31 @@ def setup_applevel_logger(
     logger = logging.getLogger(logger_name)
 
     # Set up the logging level (to know which messages to log)
-    # Sets the threshold for this logger to level.
-    # Logging messages which are less severe than level will be ignored.
-    # logging messages which have severity level or higher will be emitted by
-    # whichever handler or handlers service this logger, unless a handler’s
-    # level has been set to a higher severity level than level.
+    # Logging messages whith less severe level will be ignored, higher ones will be emitted.
+    # +----------+---------------+-----------------------------------------------------------------------------------------------------------------------------+
+    # | Level    | Numeric value | Description                                                                                                                 |
+    # +----------+---------------+-----------------------------------------------------------------------------------------------------------------------------+
+    # | CRITICAL | 50            | A serious error, indicating that the program itself may be unable to continue running.                                      |
+    # +----------+---------------+-----------------------------------------------------------------------------------------------------------------------------+
+    # | ERROR    | 40            | Due to a more serious problem, the software has not been able to perform some function.                                     |
+    # +----------+---------------+-----------------------------------------------------------------------------------------------------------------------------+
+    # | WARNING  | 30            | An indication that something unexpected happened, or indicative of some problem in the near future (e.g. ‘disk space low’). |
+    # |          |               | The software is still working as expected.                                                                                  |
+    # +----------+---------------+-----------------------------------------------------------------------------------------------------------------------------+
+    # | INFO     | 20            | Confirmation that things are working as expected.                                                                           |
+    # +----------+---------------+-----------------------------------------------------------------------------------------------------------------------------+
+    # | DEBUG    | 10            | Detailed information, typically of interest only when diagnosing problems.                                                  |
+    # +----------+---------------+-----------------------------------------------------------------------------------------------------------------------------+
+    # | NOTSET   | 0             | This is the initial default setting of a log when it is created.                                                            |
+    # |          |               | It is not really relevant and most developers will not even take notice of this category.                                   |
+    # |          |               | In many circles, it has already become nonessential. The root log is usually created with level WARNING.                    |
+    # +----------+---------------+-----------------------------------------------------------------------------------------------------------------------------+
+
     logger.setLevel(logging.DEBUG if is_debug else logging.INFO)
 
     # Set up a logging format
     formatter = logging.Formatter(
-        fmt="%(asctime)s.%(msecs)03d [%(filename)-10s:%(lineno)-4d - %(name)-30s] %(levelname)8s: %(message)s",
+        fmt="%(asctime)s.%(msecs)03d [%(name)-20s:%(lineno)-4d] %(levelname)8s: %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
     )
 
@@ -96,25 +94,6 @@ def setup_applevel_logger(
         fh.setFormatter(formatter)
         # Add the file handler to the logger
         logger.addHandler(fh)
-
-    return logger
-
-
-def get_child_logger(module_name, logger_name=APP_LOGGER_NAME):
-    """
-    Returns a logger which is a descendant to this logger, as determined by the suffix.
-    Thus, logging.getLogger('abc').getChild('def.ghi') would return the same logger as would be returned by logging.getLogger('abc.def.ghi').
-    This is a convenience method, useful when the parent logger is named using e.g. __name__ rather than a literal string.
-
-    Args:
-        module_name (str): module's __name__ from where we are calling the logger
-        logger_name (str): Parent/ancestor logger name.
-
-    Returns:
-        logging.Logger: Child logger
-    """
-
-    logger = logging.getLogger(logger_name).getChild(module_name)
 
     return logger
 
@@ -160,7 +139,7 @@ class Debug2Log:
 
     def __init__(self):
         # As the messages are triggered in this script, the logger's name is set to this file's name.
-        self.logger = get_child_logger(module_name=__name__)
+        self.logger = set_logger(logger_name= get_rel_path(__file__), is_debug=debug_flg)
         self.timer = {}
 
     def tracefunc(self, frame, event, arg):
@@ -193,5 +172,16 @@ class Debug2Log:
                 self.logger.debug(f"End {rel_path_fname} {frame.f_code.co_name} returning: {arg} elapsed: {duration:.4f}")
             return self.tracefunc
 
-    def basic_debug2log(self):
+    def set_trace(self):
         return sys.setprofile(self.tracefunc)
+
+def get_rel_path(in_file_name):
+    """
+    Returns the relative path of the file. E.g. \pkg\extract.py
+    Args:
+        in_file_name (str): __file__ (Absolute path + file name)
+    Returns:
+        str: relative path of the file
+    """
+
+    return os.sep + os.path.relpath(in_file_name, start=os.getcwd())
