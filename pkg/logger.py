@@ -16,18 +16,23 @@ debug_flg = False
 if not os.path.exists(LOG_DIR):
     os.mkdir(LOG_DIR)
 
-# Set a logger's name, in case it's not provided, to the base project's folder name is used by default (Alkemy_Challenge_Data_Analytics_con_Python)
+# Set a logger's name, in case it's not provided, to the base project's
+# folder name is used by default
+# (Alkemy_Challenge_Data_Analytics_con_Python)
 APP_LOGGER_NAME = os.path.basename(os.getcwd())
 
 # Use this line to generate one log file per file run
 # from datetime import datetime
-# APP_LOG_FILE_NAME = os.path.join(LOG_DIR, f'{APP_LOGGER_NAME}_{datetime.now():%Y%m%d_%H%M%S_%f}.log') # TODO: erase or uncomment (leave one)
-APP_LOG_FILE_NAME = os.path.join(LOG_DIR, f'{APP_LOGGER_NAME}.log')
+# APP_LOG_FILE_NAME = os.path.join(LOG_DIR,
+# f'{APP_LOGGER_NAME}_{datetime.now():%Y%m%d_%H%M%S_%f}.log') # TODO:
+# erase or uncomment (leave one)
+APP_LOG_FILE_NAME = os.path.join(LOG_DIR, f"{APP_LOGGER_NAME}.log")
 
 
 def set_logger(
-    logger_name=APP_LOGGER_NAME, is_debug=debug_flg, file_name=APP_LOG_FILE_NAME
-):
+        logger_name=APP_LOGGER_NAME,
+        is_debug=debug_flg,
+        file_name=APP_LOG_FILE_NAME):
     """
     Sets up the logger at app level
 
@@ -138,8 +143,11 @@ class Debug2Log:
     """
 
     def __init__(self):
-        # As the messages are triggered in this script, the logger's name is set to this file's name.
-        self.logger = set_logger(logger_name= get_rel_path(__file__), is_debug=debug_flg)
+        # As the messages are triggered in this script, the logger's name is
+        # set to this file's name.
+        self.logger = set_logger(
+            logger_name=get_rel_path(__file__),
+            is_debug=debug_flg)
         self.timer = {}
 
     def tracefunc(self, frame, event, arg):
@@ -160,24 +168,32 @@ class Debug2Log:
             function: set tracefunc
         """
 
-        # Log only the functions from this project, imported modules are ignored.
+        # Log only the functions from this project, imported modules are
+        # ignored.
         if frame.f_code.co_filename.startswith(os.getcwd()):
             # Get the relative path of the file. E.g. \pkg\extract.py
-            rel_path_fname = os.sep + os.path.relpath(frame.f_code.co_filename, start=os.getcwd())
+            rel_path_fname = os.sep + os.path.relpath(
+                frame.f_code.co_filename, start=os.getcwd()
+            )
             if event == "call":
                 self.timer[rel_path_fname] = time.time()
-                self.logger.debug(f"Call {rel_path_fname} {frame.f_code.co_name} locals: {'' if frame.f_locals is None else frame.f_locals}")
+                self.logger.debug(
+                    f"Call {rel_path_fname} {frame.f_code.co_name} locals: {'' if frame.f_locals is None else frame.f_locals}"
+                )
             elif event == "return" and rel_path_fname in self.timer:
                 duration = time.time() - self.timer[rel_path_fname]
-                self.logger.debug(f"End {rel_path_fname} {frame.f_code.co_name} returning: {arg} elapsed: {duration:.4f}")
+                self.logger.debug(
+                    f"End {rel_path_fname} {frame.f_code.co_name} returning: {arg} elapsed: {duration:.4f}"
+                )
             return self.tracefunc
 
     def set_trace(self):
         return sys.setprofile(self.tracefunc)
 
+
 def get_rel_path(in_file_name):
     """
-    Returns the relative path of the file. E.g. \pkg\extract.py
+    Returns the relative path of the file. E.g. \\pkg\\extract.py
     Args:
         in_file_name (str): __file__ (Absolute path + file name)
     Returns:
