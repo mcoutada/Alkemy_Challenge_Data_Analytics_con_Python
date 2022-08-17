@@ -1,10 +1,7 @@
 import pkg.logger as logger
 
-
 # Set the logger for this file
-log = logger.set_logger(
-    logger_name=logger.get_rel_path(__file__), is_debug=logger.debug_flg
-)
+log = logger.set_logger(logger_name=logger.get_rel_path(__file__))
 
 
 def test(b):

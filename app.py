@@ -1,6 +1,7 @@
+import sys
+
 import pkg.extract as extract
 import pkg.logger as logger
-import sys
 
 
 def main():
@@ -9,9 +10,7 @@ def main():
     logger.debug_flg = True if sys.argv[1:2] == ["DEBUG"] else False
 
     # Set the logger for this file
-    log = logger.set_logger(
-        logger_name=logger.get_rel_path(__file__), is_debug=logger.debug_flg
-    )
+    log = logger.set_logger(logger_name=logger.get_rel_path(__file__))
     log.info("Start Main")
 
     # Log basic debug information like function calls and returns (log level

@@ -5,8 +5,8 @@ https://github.com/yashprakash13/Python-Cool-Concepts/blob/main/logging_template
 
 """
 import logging
-import sys
 import os
+import sys
 import time
 
 LOG_DIR = os.path.join(os.getcwd(), "logs")
