@@ -25,7 +25,8 @@ pip install -r requirements.txt
 
 ## Logs:
 Se generan en la carpeta /logs del proyecto
-Modo DEBUG:
+
+## Modo DEBUG:
 ```bat
 python app.py DEBUG
 ```
@@ -35,8 +36,8 @@ Permite que, para todas las funciones, se generen mensajes de log de:
 
 Un fallo inesperado será logueado automáticamente.
 
-Otros comandos útiles:
-Armar requirements.txt
+# Otros comandos útiles:
+Armar requirements.txt:
 ```bat
 pip freeze >> requirements.txt
 ```
