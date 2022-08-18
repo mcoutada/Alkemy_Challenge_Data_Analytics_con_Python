@@ -36,7 +36,7 @@ Permite que, para todas las funciones, se generen mensajes de log de:
 
 Un fallo inesperado será logueado automáticamente.
 
-# Otros comandos útiles:
+## Otros comandos útiles:
 Armar requirements.txt:
 ```bat
 pip freeze >> requirements.txt
