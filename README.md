@@ -39,6 +39,11 @@ Un fallo inesperado será logueado automáticamente.
 ## Otros comandos útiles:
 Armar requirements.txt:
 ```bat
-pip freeze >> requirements.txt
+pip freeze > requirements.txt
 ```
-
+Que se ha generado al instalar los siguientes paquetes:
+```bat
+pip install requests
+pip install pandas
+pip install unidecode
+```
