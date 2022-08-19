@@ -6,6 +6,7 @@ import pkg.logger as logger
 
 def main():
 
+    ###### Logger setup - Start ######
     # Check if the user has passed in a command line DEBUG argument
     logger.debug_flg = True if sys.argv[1:2] == ["DEBUG"] else False
 
@@ -17,9 +18,12 @@ def main():
     # must be set to DEBUG).
     basic_debug = logger.Debug2Log()
     basic_debug.set_trace()
+    
+    ###### Logger setup - End ######
 
-    b = {"a": 1, "b": 2}
-    extract.test(b)
+
+    raw_csvs = extract.download_csvs()
+    
 
     log.info("End Main")
 

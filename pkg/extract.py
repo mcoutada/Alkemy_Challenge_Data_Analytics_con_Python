@@ -4,7 +4,7 @@ import os
 
 import requests
 
-import logger
+import pkg.logger as logger
 
 # Set the logger for this file
 log = logger.set_logger(logger_name=logger.get_rel_path(__file__))
@@ -37,7 +37,7 @@ def get_abspath(fname):
 
     now = datetime.datetime.now()
     yyyy_mon = now.strftime("%Y-%B")
-    dd_mm_yyyy = now.strftime("%d-%m-%y")
+    dd_mm_yyyy = now.strftime("%d-%m-%Y")
     
     full_path = os.path.join(os.getcwd(), 'data', fname, yyyy_mon)
     full_fname = os.path.join(full_path, fname + "-" + dd_mm_yyyy + ".csv")
@@ -45,18 +45,20 @@ def get_abspath(fname):
     return full_path, full_fname
 
 
-def download():
+def download_csvs():
 
-    data = {
+    urls = {
         "museos_datosabiertos": "https://datos.cultura.gob.ar/dataset/37305de4-3cce-4d4b-9d9a-fec3ca61d09f/resource/4207def0-2ff7-41d5-9095-d42ae8207a5d/download/museos_datosabiertos.csv",
         "cine": "https://datos.cultura.gob.ar/dataset/37305de4-3cce-4d4b-9d9a-fec3ca61d09f/resource/392ce1a8-ef11-4776-b280-6f1c7fae16ae/download/cine.csv",
         "biblioteca_popular": "https://datos.cultura.gob.ar/dataset/37305de4-3cce-4d4b-9d9a-fec3ca61d09f/resource/01c6c048-dbeb-44e0-8efa-6944f73715d7/download/biblioteca_popular.csv",
     }
 
-    for src_file, url in data.items():
-        log.info("Downloading {}".format(src_file))
+    csvs = {}
+
+    for category, url in urls.items():
+        log.info("Downloading {}".format(category))
         
-        full_path, full_fname = get_abspath(src_file)
+        full_path, full_fname = get_abspath(category)
 
         # Create the directory if it doesn't exist
         # exist_ok = OSError (directory exists) will be ignored and the directory will not be created
@@ -77,6 +79,11 @@ def download():
         with open(full_fname, "wb") as f: 
             f.write(r.content)
 
+        log.info(f"{category} downloaded and saved in {full_fname}")
+
+        csvs[category] = full_fname
+        
+    return csvs
 
 if __name__ == "__main__":
-    download()
+    download_csvs()
