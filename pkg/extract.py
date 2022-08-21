@@ -1,14 +1,11 @@
 import datetime
 import locale
 import os
-
 import requests
-
 import pkg.logger as logger
 
 # Set the logger for this file
 log = logger.set_logger(logger_name=logger.get_rel_path(__file__))
-
 
 
 def get_abspath(fname):
@@ -38,8 +35,8 @@ def get_abspath(fname):
     now = datetime.datetime.now()
     yyyy_mon = now.strftime("%Y-%B")
     dd_mm_yyyy = now.strftime("%d-%m-%Y")
-    
-    full_path = os.path.join(os.getcwd(), 'data', fname, yyyy_mon)
+
+    full_path = os.path.join(os.getcwd(), "data", fname, yyyy_mon)
     full_fname = os.path.join(full_path, fname + "-" + dd_mm_yyyy + ".csv")
 
     return full_path, full_fname
@@ -57,11 +54,12 @@ def download_csvs():
 
     for category, url in urls.items():
         log.info("Downloading {}".format(category))
-        
+
         full_path, full_fname = get_abspath(category)
 
         # Create the directory if it doesn't exist
-        # exist_ok = OSError (directory exists) will be ignored and the directory will not be created
+        # exist_ok = OSError (directory exists) will be ignored and the
+        # directory will not be created
         os.makedirs(full_path, exist_ok=True)
 
         # Downloading the file from the URL. If the response takes more than 5
@@ -74,16 +72,18 @@ def download_csvs():
         # Therefore, r.content goes along with open(full_fname, "wb")
         # Alternatively, you can use:
         # r.text along with open(full_fname, "wt", encoding=r.encoding)
-        # If we use text, we need to enforce to write the file in the same encoding of the request, which is iso-8859-1
-        
-        with open(full_fname, "wb") as f: 
+        # If we use text, we need to enforce to write the file in the same
+        # encoding of the request, which is iso-8859-1
+
+        with open(full_fname, "wb") as f:
             f.write(r.content)
 
         log.info(f"{category} downloaded and saved in {full_fname}")
 
         csvs[category] = full_fname
-        
+
     return csvs
+
 
 if __name__ == "__main__":
     download_csvs()

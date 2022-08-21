@@ -1,9 +1,8 @@
 import sys
-
 import pkg.extract as e
-import pkg.transform as t
 import pkg.load as l
 import pkg.logger as logger
+import pkg.transform as t
 
 
 def main():
@@ -20,11 +19,10 @@ def main():
     # must be set to DEBUG).
     basic_debug = logger.Debug2Log()
     basic_debug.set_trace()
-    
+
     ###### Logger setup - End ######
 
-
-    csvs_dic = e.download_csvs() 
+    csvs_dic = e.download_csvs()
     dfs_dic = t.transform(csvs_dic)
     l.load(dfs_dic)
 
