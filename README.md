@@ -13,10 +13,6 @@ cd Alkemy_Challenge_Data_Analytics_con_Python
 python -m venv alkemy_mcoutada_venv
 :: Activar el entorno (el comando de abajo cambia si no es Windows)
 .\alkemy_mcoutada_venv\Scripts\activate.bat
-:: Para desactivarlo, escribir:
-deactivate
-:: o correr:
-.\alkemy_mcoutada_venv\Scripts\deactivate.bat
 ```
 Instalar las dependencias:
 ```bat
