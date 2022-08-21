@@ -46,4 +46,7 @@ Que se ha generado al instalar los siguientes paquetes:
 pip install requests
 pip install pandas
 pip install unidecode
+pip install sqlalchemy
+pip install python-decouple
 ```
+python-decouple fue necesario instalarlo tambien fuera del virtual env para hacerlo andar

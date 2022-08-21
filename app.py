@@ -1,6 +1,8 @@
 import sys
 
-import pkg.extract as extract
+import pkg.extract as e
+import pkg.transform as t
+import pkg.load as l
 import pkg.logger as logger
 
 
@@ -22,8 +24,9 @@ def main():
     ###### Logger setup - End ######
 
 
-    raw_csvs = extract.download_csvs()
-    
+    csvs_dic = e.download_csvs() 
+    dfs_dic = t.transform(csvs_dic)
+    l.load(dfs_dic)
 
     log.info("End Main")
 
