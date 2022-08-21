@@ -1,18 +1,22 @@
 # Creating a connection to the database.
 import os
+
 import decouple as d
 import sqlalchemy as s
+
 import pkg.logger as logger
+
 
 def exists_in_db(t): return s.inspect(engine).has_table(
     """
     It checks if a table exists in the database.
-    
+
     :param t: the table name
     :return: A boolean value.
     """
     table_name=t, schema=POSTGRES_SCHEMA
 )
+
 
 # Set the logger for this file
 log = logger.set_logger(logger_name=logger.get_rel_path(__file__))

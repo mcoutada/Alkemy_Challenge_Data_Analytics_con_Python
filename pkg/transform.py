@@ -188,8 +188,6 @@ def standarize_data(dfs_dic):
         dict: Dictionary of transformed dataframes (key: category, value: category dataframes)
     """
 
-    def clean_up(x): return un.unidecode(str(x).upper().strip())
-
     for wk_cat, wk_df in dfs_dic.items():
         # Fix data inconsistencies
         # "Neuquén " --> "NEUQUEN"
@@ -263,6 +261,17 @@ def standarize_header(col_name):
         col_name = manual_adjustments[col_name]
 
     return col_name
+
+
+def clean_up(x):
+    """
+    It takes a string, converts it to upper case, strips out any leading or trailing whitespace, and
+    then removes any non-ASCII characters
+
+    :param x: the string to be cleaned up
+    :return: A function object
+    """
+    return un.unidecode(str(x).upper().strip())
 
 
 if __name__ == "__main__":

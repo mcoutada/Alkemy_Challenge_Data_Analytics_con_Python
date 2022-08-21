@@ -1,7 +1,9 @@
 import datetime
 import locale
 import os
+
 import requests
+
 import pkg.logger as logger
 
 # Set the logger for this file
