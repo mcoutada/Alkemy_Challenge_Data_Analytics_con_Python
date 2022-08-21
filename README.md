@@ -18,6 +18,10 @@ Instalar las dependencias:
 ```bat
 pip install -r requirements.txt
 ```
+Correr el proyecto:
+```bat
+pip install -r requirements.txt
+```
 
 ## Logs:
 Se generan en la carpeta /logs del proyecto
