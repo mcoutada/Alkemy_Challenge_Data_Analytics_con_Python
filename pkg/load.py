@@ -1,4 +1,3 @@
-# Creating a connection to the database.
 import os
 
 import decouple as d
