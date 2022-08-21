@@ -50,3 +50,11 @@ pip install sqlalchemy
 pip install python-decouple
 ```
 python-decouple fue necesario instalarlo tambien fuera del virtual env para hacerlo andar
+
+Desactivar el entorno virtual:
+```bat
+:: Para desactivarlo, escribir:
+deactivate
+:: o correr:
+.\alkemy_mcoutada_venv\Scripts\deactivate.bat
+```
