@@ -169,9 +169,14 @@ class Debug2Log:
 
         # Log only the functions from this project, imported modules and
         # venv folder are ignored.
+        # os.environ["VIRTUAL_ENV"] causes error when running with the
+        # venv desactivated, so we need to check. if desactivated,
+        # the venv folder files are not called so we can use 'absurd'
         if frame.f_code.co_filename.startswith(
-                os.getcwd()) and not frame.f_code.co_filename.startswith(
-                os.environ["VIRTUAL_ENV"]):
+            os.getcwd()
+        ) and not frame.f_code.co_filename.startswith(
+            os.environ["VIRTUAL_ENV"] if in_virtualenv() else "absurd"
+        ):
             # Get the relative path of the file. E.g. \pkg\extract.py
             rel_path_fname = os.sep + os.path.relpath(
                 frame.f_code.co_filename, start=os.getcwd()
@@ -202,3 +207,16 @@ def get_rel_path(in_file_name):
     """
 
     return os.sep + os.path.relpath(in_file_name, start=os.getcwd())
+
+
+def get_base_prefix_compat():
+    """Get base/real prefix, or sys.prefix if there is none."""
+    return (
+        getattr(sys, "base_prefix", None)
+        or getattr(sys, "real_prefix", None)
+        or sys.prefix
+    )
+
+
+def in_virtualenv():
+    return get_base_prefix_compat() != sys.prefix
