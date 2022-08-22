@@ -64,4 +64,4 @@ def load(dfs_dic):
 
 
 if __name__ == "__main__":
-    load()
+    pass
