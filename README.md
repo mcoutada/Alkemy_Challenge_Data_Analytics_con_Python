@@ -18,7 +18,8 @@ Instalar las dependencias:
 ```bat
 pip install -r requirements.txt
 ```
-Setear la conexion a la DB en el archivo <mark>.env</mark>
+Setear la conexion a la DB en el archivo `.env`
+
 Correr el proyecto:
 ```bat
 python app.py
