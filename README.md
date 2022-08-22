@@ -48,6 +48,7 @@ pip install pandas
 pip install unidecode
 pip install sqlalchemy
 pip install python-decouple
+pip install psycopg2-binary
 ```
 python-decouple fue necesario instalarlo tambien fuera del virtual env para hacerlo andar
 

@@ -6,14 +6,14 @@ import sqlalchemy as s
 import pkg.logger as logger
 
 
-def exists_in_db(t):
+def exists_in_db(t, e):
     """
     It checks if a table exists in the database.
 
     :param t: the table name
     :return: A boolean value.
     """
-    return s.inspect(engine).has_table(table_name=t, schema=POSTGRES_SCHEMA)
+    return s.inspect(e).has_table(table_name=t, schema=POSTGRES_SCHEMA)
 
 
 # Set the logger for this file
@@ -36,7 +36,7 @@ def load(dfs_dic):
     dfs_dic = {f"alk_{cat}": df for cat, df in dfs_dic.items()}
 
     # Apply exists_in_db to all elements in a list
-    exist_in_db = [exists_in_db(tb) for tb in dfs_dic.keys()]
+    exist_in_db = [exists_in_db(tb, engine) for tb in dfs_dic.keys()]
 
     # Check if all tables exist in the database
     if not all(exist_in_db):
