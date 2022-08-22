@@ -4,6 +4,7 @@ https://towardsdatascience.com/the-reusable-python-logging-template-for-all-your
 https://github.com/yashprakash13/Python-Cool-Concepts/blob/main/logging_template/logger/logger.py
 
 """
+import datetime
 import logging
 import os
 import sys
@@ -22,11 +23,9 @@ if not os.path.exists(LOG_DIR):
 APP_LOGGER_NAME = os.path.basename(os.getcwd())
 
 # Use this line to generate one log file per file run
-# from datetime import datetime
-# APP_LOG_FILE_NAME = os.path.join(LOG_DIR,
-# f'{APP_LOGGER_NAME}_{datetime.now():%Y%m%d_%H%M%S_%f}.log') # TODO:
-# erase or uncomment (leave one)
-APP_LOG_FILE_NAME = os.path.join(LOG_DIR, f"{APP_LOGGER_NAME}.log")
+APP_LOG_FILE_NAME = os.path.join(
+    LOG_DIR, f"{APP_LOGGER_NAME}_{datetime.datetime.now():%Y%m%d_%H%M%S_%f}.log"
+)
 
 
 def set_logger(

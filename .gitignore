@@ -1,6 +1,11 @@
 # My lines:
 alkemy_mcoutada_venv/
+data/
+.vscode/
+# The lines below are comented in the template as they are required in the exercise, and have to be uploaded to the repository.
+# .env
 
+############################################################################
 # Gitignore template taken from:
 # https://github.com/github/gitignore/blob/main/Python.gitignore
 # Byte-compiled / optimized / DLL files
@@ -125,7 +130,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+# .env
 .venv
 env/
 venv/
