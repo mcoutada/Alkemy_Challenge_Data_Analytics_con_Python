@@ -20,7 +20,7 @@ pip install -r requirements.txt
 ```
 Correr el proyecto:
 ```bat
-pip install -r requirements.txt
+python app.py
 ```
 
 ## Logs:

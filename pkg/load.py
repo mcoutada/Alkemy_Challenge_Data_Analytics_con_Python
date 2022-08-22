@@ -6,15 +6,14 @@ import sqlalchemy as s
 import pkg.logger as logger
 
 
-def exists_in_db(t): return s.inspect(engine).has_table(
+def exists_in_db(t):
     """
     It checks if a table exists in the database.
 
     :param t: the table name
     :return: A boolean value.
     """
-    table_name=t, schema=POSTGRES_SCHEMA
-)
+    return s.inspect(engine).has_table(table_name=t, schema=POSTGRES_SCHEMA)
 
 
 # Set the logger for this file
