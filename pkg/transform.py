@@ -22,19 +22,20 @@ def transform(csvs_dic):
         dfs_dic[category] = df
 
     dfs_dic = standarize_data(dfs_dic)
-    dfs_dic["registros_unificados"] = set_t1_registros_unificados(
+    out_dfs_dic = {}
+    out_dfs_dic["registros_unificados"] = set_t1_registros_unificados(
         list(dfs_dic.values())
     )
-    dfs_dic["registros_totales"] = set_t2_registros_totales(
+    out_dfs_dic["registros_totales"] = set_t2_registros_totales(
         list(dfs_dic.values()))
-    dfs_dic["totales_cine"] = set_t3_totales_cine(dfs_dic["cine"])
+    out_dfs_dic["totales_cine"] = set_t3_totales_cine(dfs_dic["cine"])
 
     now = dt.datetime.now()
 
-    for cat in dfs_dic.keys():
-        dfs_dic[cat]["dt_loaded"] = now
+    for cat in out_dfs_dic.keys():
+        out_dfs_dic[cat]["dt_loaded"] = now
 
-    return dfs_dic
+    return out_dfs_dic
 
 
 def set_t1_registros_unificados(dfs_lst):
