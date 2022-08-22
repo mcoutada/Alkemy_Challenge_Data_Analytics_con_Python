@@ -167,9 +167,11 @@ class Debug2Log:
             function: set tracefunc
         """
 
-        # Log only the functions from this project, imported modules are
-        # ignored.
-        if frame.f_code.co_filename.startswith(os.getcwd()):
+        # Log only the functions from this project, imported modules and
+        # venv folder are ignored.
+        if frame.f_code.co_filename.startswith(
+                os.getcwd()) and not frame.f_code.co_filename.startswith(
+                os.environ["VIRTUAL_ENV"]):
             # Get the relative path of the file. E.g. \pkg\extract.py
             rel_path_fname = os.sep + os.path.relpath(
                 frame.f_code.co_filename, start=os.getcwd()
