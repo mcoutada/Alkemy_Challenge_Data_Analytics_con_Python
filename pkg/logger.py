@@ -79,10 +79,10 @@ def set_logger(
     # Set up a console handler
     sh = logging.StreamHandler(sys.stdout)
     sh.setFormatter(formatter)
-    logger.handlers.clear()
 
     # Add the console handler to the logger for the messages to be shown on
     # the console
+    logger.handlers.clear()
     logger.addHandler(sh)
 
     # sys.excepthook(*exc_info) prints out a given traceback and exception to

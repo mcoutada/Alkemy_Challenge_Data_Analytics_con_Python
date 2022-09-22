@@ -29,7 +29,7 @@ POSTGRES_SCHEMA = d.config("POSTGRES_SCHEMA")
 
 def load(dfs_dic):
     url = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
-    engine = s.create_engine(url)
+    engine = s.create_engine(url, pool_pre_ping=True)
 
     # Apply prefix to category names as they will be used as table names in
     # the database
