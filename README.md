@@ -1,5 +1,14 @@
 # Alkemy - Challenge Data Analytics con Python
 
+## English description:
+#Admission challenge:
+Extract CSV files from different sources using Python's Requests library.<br>
+Transform the data using Python's Pandas library.<br>
+Load the data frames to a PostgreSQL database using SQLAlchemy.<br>
+Set the project into a Virtual Environment (venv) and generate a proper requirements.txt.<br>
+Generate a log of the process using Python's logging library.<br>
+The DB config is taken from a .env file using Python's decouple library.<br>
+
 ## Pasos a seguir: 
 Abrir una ventana de CMD en una carpeta de trabajo a eleccion y correr:
 
