@@ -1,7 +1,7 @@
 # Alkemy - Challenge Data Analytics con Python
 
 ## English description:
-#Admission challenge:
+# Admission challenge ad Alkemy.org for Python + Data Analytics:
 Extract CSV files from different sources using Python's Requests library.<br>
 Transform the data using Python's Pandas library.<br>
 Load the data frames to a PostgreSQL database using SQLAlchemy.<br>
